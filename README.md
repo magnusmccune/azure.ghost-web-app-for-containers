@@ -1,15 +1,12 @@
 # azure.ghost-web-app-for-containers
 
-This is a modification of [@andrewmatveychuk](https://github.com/andrewmatveychuk)'s excellent work on automating the deployment of the Ghost blogging platform to Azure App Service Containers using Azure Front Door(or Azure CDN), Azure DB for MySQL and other Azure Services. His original repo is located [here](https://github.com/andrewmatveychuk/azure.ghost-web-app-for-containers).
+This is a modification of [@andrewmatveychuk](https://github.com/andrewmatveychuk)'s excellent work on automating the deployment of the [Ghost](https://ghost.org/) blogging platform to [Azure App Service Containers](https://azure.microsoft.com/en-us/services/app-service/containers/) using Azure Front Door(or Azure CDN), Azure DB for MySQL and other Azure Services. His original repo is located [here](https://github.com/andrewmatveychuk/azure.ghost-web-app-for-containers).
 
 The primary objective of this fork is to make the IaC work in my environment, which has centralized logging, Front Door, and other preexisting Azure Services. 
 
 I may also find time to create a Azure DevOps workflows for managing updates to both the container file(with Azure Container Registry) and the continuous deployment of the solution.
 
 As a stretch goal, I'd like to find the time to bring back the multi-container setup that Andrew had originally created but later failed on him(documented in his blog post, [here](https://andrewmatveychuk.com/how-to-connect-to-azure-database-for-mysql-from-ghost-container/)) as it is significantly more cost effective.
-
-A one-click [Ghost](https://ghost.org/) deployment on [Azure Web App for Containers](https://azure.microsoft.com/en-us/services/app-service/containers/).
-
 ## Deploy
 
 [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fandrewmatveychuk%2Fazure.ghost-web-app-for-containers%2Fmaster%2Fghost.json)
