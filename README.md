@@ -1,6 +1,7 @@
 # azure.ghost-web-app-for-containers
 
-This is a modification of [@andrewmatveychuk](https://github.com/andrewmatveychuk)'s excellent work on automating the deployment of the [Ghost](https://ghost.org/) blogging platform to [Azure App Service Containers](https://azure.microsoft.com/en-us/services/app-service/containers/) using Azure Front Door(or Azure CDN), Azure DB for MySQL and other Azure Services. His original repo is located [here](https://github.com/andrewmatveychuk/azure.ghost-web-app-for-containers).
+This is a modification of [@andrewmatveychuk](https://github.com/andrewmatveychuk)'s excellent work on automating the deployment of the [Ghost](https://ghost.org/) blogging platform to [Azure App Service Containers](https://azure.microsoft.com/en-us/services/app-service/containers/) using Azure Front Door(or Azure CDN), Azure DB for MySQL and other Azure Services.
+His original repo is located [here](https://github.com/andrewmatveychuk/azure.ghost-web-app-for-containers).
 
 The primary objective of this fork is to make the IaC work in my environment, which has centralized logging, Front Door, and other preexisting Azure Services. 
 
@@ -9,7 +10,7 @@ I may also find time to create a Azure DevOps workflows for managing updates to 
 As a stretch goal, I'd like to find the time to bring back the multi-container setup that Andrew had originally created but later failed on him(documented in his blog post, [here](https://andrewmatveychuk.com/how-to-connect-to-azure-database-for-mysql-from-ghost-container/)) as it is significantly more cost effective.
 ## Deploy
 
-[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fandrewmatveychuk%2Fazure.ghost-web-app-for-containers%2Fmaster%2Fghost.json)
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fmagnusmccune%2Fazure.ghost-web-app-for-containers%2Fmaster%2Fghost.json)
 
 ## Getting Started
 
