@@ -1,13 +1,9 @@
-targetScope = 'resourceGroup'
-
 @description('Prefix to use when creating the resources in this deployment.')
 param applicationNamePrefix string = 'ghost'
 
 @description('App Service Plan pricing tier')
 param appServicePlanSku string = 'B1'
 
-@description('Log Analytics workspace pricing tier')
-param logAnalyticsWorkspaceSku string = 'Free'
 
 @description('Storage account pricing tier')
 param storageAccountSku string = 'Standard_LRS'
@@ -23,10 +19,13 @@ param mySQLServerSku string = 'B_Gen5_1'
 param databasePassword string
 
 @description('Ghost container full image name and tag')
-param ghostContainerName string = 'andrewmatveychuk/ghost-ai:latest'
+param ghostContainerName string
 
 @description('Container registry where the image is hosted')
-param containerRegistryUrl string = 'https://index.docker.io/v1'
+param containerRegistryUrl string
+
+@description('ResourceID of existing Log Analytics Workspace')
+param lawID string
 
 @allowed([
   'Web app with Azure CDN'
@@ -36,7 +35,6 @@ param deploymentConfiguration string = 'Web app with Azure Front Door'
 
 var webAppName = '${applicationNamePrefix}-web-${uniqueString(resourceGroup().id)}'
 var appServicePlanName = '${applicationNamePrefix}-asp-${uniqueString(resourceGroup().id)}'
-var logAnalyticsWorkspaceName = '${applicationNamePrefix}-la-${uniqueString(resourceGroup().id)}'
 var applicationInsightsName = '${applicationNamePrefix}-ai-${uniqueString(resourceGroup().id)}'
 var keyVaultName = '${applicationNamePrefix}-kv-${uniqueString(resourceGroup().id)}'
 var storageAccountName = '${applicationNamePrefix}stor${uniqueString(resourceGroup().id)}'
@@ -60,14 +58,6 @@ var cdnProfileSku = {
 var frontDoorName = '${applicationNamePrefix}-fd-${uniqueString(resourceGroup().id)}'
 var wafPolicyName = '${applicationNamePrefix}waf${uniqueString(resourceGroup().id)}'
 
-module logAnalyticsWorkspace './modules/logAnalyticsWorkspace.bicep' = {
-  name: 'logAnalyticsWorkspaceDeploy'
-  params: {
-    logAnalyticsWorkspaceName: logAnalyticsWorkspaceName
-    logAnalyticsWorkspaceSku: logAnalyticsWorkspaceSku
-    location: location
-  }
-}
 
 module storageAccount 'modules/storageAccount.bicep' = {
   name: 'storageAccountDeploy'
@@ -75,7 +65,7 @@ module storageAccount 'modules/storageAccount.bicep' = {
     storageAccountName: storageAccountName
     storageAccountSku: storageAccountSku
     fileShareFolderName: ghostContentFileShareName
-    logAnalyticsWorkspaceId: logAnalyticsWorkspace.outputs.id
+    logAnalyticsWorkspaceId: lawID
     location: location
   }
 }
@@ -86,7 +76,7 @@ module keyVault './modules/keyVault.bicep' = {
     keyVaultName: keyVaultName
     keyVaultSecretName: 'databasePassword'
     keyVaultSecretValue: databasePassword
-    logAnalyticsWorkspaceId: logAnalyticsWorkspace.outputs.id
+    logAnalyticsWorkspaceId: lawID
     servicePrincipalId: webApp.outputs.principalId
     location: location
   }
@@ -103,7 +93,7 @@ module webApp './modules/webApp.bicep' = {
     fileShareName: ghostContentFileShareName
     containerMountPath: ghostContentFilesMountPath
     location: location
-    logAnalyticsWorkspaceId: logAnalyticsWorkspace.outputs.id
+    logAnalyticsWorkspaceId: lawID
     deploymentConfiguration: deploymentConfiguration
   }
 }
@@ -130,7 +120,7 @@ module appServicePlan './modules/appServicePlan.bicep' = {
     appServicePlanName: appServicePlanName
     appServicePlanSku: appServicePlanSku
     location: location
-    logAnalyticsWorkspaceId: logAnalyticsWorkspace.outputs.id
+    logAnalyticsWorkspaceId: lawID
   }
 }
 
@@ -139,7 +129,7 @@ module applicationInsights './modules/applicationInsights.bicep' = {
   params: {
     applicationInsightsName: applicationInsightsName
     location: location
-    logAnalyticsWorkspaceId: logAnalyticsWorkspace.outputs.id
+    logAnalyticsWorkspaceId: lawID
   }
 }
 
@@ -149,7 +139,7 @@ module mySQLServer 'modules/mySQLServer.bicep' = {
     administratorLogin: databaseLogin
     administratorPassword: databasePassword
     location: location
-    logAnalyticsWorkspaceId: logAnalyticsWorkspace.outputs.id
+    logAnalyticsWorkspaceId: lawID
     mySQLServerName: mySQLServerName
     mySQLServerSku: mySQLServerSku
   }
@@ -162,7 +152,7 @@ module cdnEndpoint './modules/cdnEndpoint.bicep' = if (deploymentConfiguration =
     cdnProfileSku: cdnProfileSku
     cdnEndpointName: cdnEndpointName
     location: location
-    logAnalyticsWorkspaceId: logAnalyticsWorkspace.outputs.id
+    logAnalyticsWorkspaceId: lawID
     webAppName: webApp.name
     webAppHostName: webApp.outputs.hostName
   }
@@ -173,7 +163,7 @@ module frontDoor 'modules/frontDoor.bicep' = if (deploymentConfiguration == 'Web
   params: {
     frontDoorName: frontDoorName
     wafPolicyName: wafPolicyName
-    logAnalyticsWorkspaceId: logAnalyticsWorkspace.outputs.id
+    logAnalyticsWorkspaceId: lawID
     webAppName: webApp.outputs.name
   }
 }
