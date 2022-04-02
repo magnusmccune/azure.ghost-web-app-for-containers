@@ -1,0 +1,71 @@
+trigger:
+  branches:
+    include:
+    - master
+
+pool:
+  vmImage: ubuntu-latest
+
+stages:
+- stage: Build_Validate  
+  jobs:
+  - job: Build
+    steps:
+    - task: CopyFiles@2
+      displayName: 'Include templates in the artifact'
+      inputs:
+        Contents: |
+          *
+        TargetFolder: '$(Build.ArtifactStagingDirectory)'
+      
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publish artifact'
+      inputs:
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+        ArtifactName: 'drop'
+        publishLocation: 'Container'
+  
+  - job: Test_DEV_BICEP
+    steps:
+    - task: AzureCLI@2
+      displayName: 'Validate BICEP with What-If'
+      inputs:
+        azureSubscription: '$(SCName)'
+        scriptType: 'bash'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          az deployment sub what-if \
+            --location $(location) \
+            --template-file $(Build.SourcesDirectory)/ghost.bicep \
+            --parameters @$(Build.SourcesDirectory)/ghost.parameters.dev.json
+- stage: DEV
+  dependsOn:
+    Build_Validate
+  condition: succeeded('Build_Validate')
+  jobs:
+    - deployment: Deploy_BICEP
+      displayName: Deploy BICEP in DEV
+      environment: 'dev'
+      strategy:
+        runOnce:
+          deploy:
+            steps:
+            - task: DownloadBuildArtifacts@0
+              displayName: 'Download artifact'
+              inputs:
+                buildType: 'current'
+                downloadType: 'single'
+                artifactName: 'drop'
+                downloadPath: '$(System.ArtifactsDirectory)'
+
+            - task: AzureCLI@2
+              displayName: 'Deploy BICEP'
+              inputs:
+                azureSubscription: '$(SCName)'
+                scriptType: 'bash'
+                scriptLocation: 'inlineScript'
+                inlineScript: |
+                  az deployment sub create \
+                    --location $(location) \
+                    --template-file $(System.ArtifactsDirectory)/drop/ghost.bicep \
+                    --parameters @$(System.ArtifactsDirectory)/drop/ghost.parameters.dev.json
