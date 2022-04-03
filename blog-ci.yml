@@ -16,6 +16,8 @@ stages:
       inputs:
         Contents: |
           ghost.bicep
+          ghost.parameters.dev.json
+          ghost.parameters.prd.json
           **/modules/**
         TargetFolder: '$(Build.ArtifactStagingDirectory)'
       
