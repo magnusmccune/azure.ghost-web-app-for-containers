@@ -62,7 +62,7 @@ var cdnProfileSku = {
 
 //Web app with Azure Front Door
 var frontDoorName = toLower('${orgPrefix}${projectPrefix}afd01')
-var wafPolicyName = toLower('${orgPrefix}${projectPrefix}afd01-waf01')
+var wafPolicyName = toLower('${orgPrefix}${projectPrefix}waf01')
 
 
 module storageAccount 'modules/storageAccount.bicep' = {
