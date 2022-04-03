@@ -3,7 +3,7 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "databasePassword": {
-            "value": ""
+            "value": "placeholder"
         },
         "ghostContainerName": {
             "value": "magnusmccune/ghost-ai:latest"
