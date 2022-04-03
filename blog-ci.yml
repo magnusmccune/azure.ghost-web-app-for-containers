@@ -15,6 +15,8 @@ stages:
       displayName: 'Include templates in the artifact'
       inputs:
         Contents: |
+          main.bicep
+          infra.bicep
           ghost.bicep
           ghost.parameters.dev.json
           ghost.parameters.prd.json
@@ -37,8 +39,8 @@ stages:
         scriptType: 'bash'
         scriptLocation: 'inlineScript'
         inlineScript: |
-          az deployment group what-if \
-            --resource-group $(rgName) \
+          az deployment sub what-if \
+            --location $(location) \
             --template-file $(Build.SourcesDirectory)/ghost.bicep \
             --parameters @$(Build.SourcesDirectory)/ghost.parameters.dev.json
 - stage: DEV
@@ -68,8 +70,8 @@ stages:
                 scriptType: 'bash'
                 scriptLocation: 'inlineScript'
                 inlineScript: |
-                  az deployment group create \
-                    --resource-group $(rgName) \
+                  az deployment sub create \
+                    --location $(location) \
                     --template-file $(System.ArtifactsDirectory)/drop/ghost.bicep \
                     --parameters @$(System.ArtifactsDirectory)/drop/ghost.parameters.dev.json \
                     --parameters databasePassword='$(databasePassword)' \
