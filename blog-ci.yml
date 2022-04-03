@@ -15,7 +15,8 @@ stages:
       displayName: 'Include templates in the artifact'
       inputs:
         Contents: |
-          *
+          ghost.bicep
+          **/modules/**
         TargetFolder: '$(Build.ArtifactStagingDirectory)'
       
     - task: PublishBuildArtifacts@1
