@@ -72,5 +72,5 @@ stages:
                     --resource-group $(rgName) \
                     --template-file $(System.ArtifactsDirectory)/drop/ghost.bicep \
                     --parameters @$(System.ArtifactsDirectory)/drop/ghost.parameters.dev.json \
-                    --parameters databasePassword='$(databasePassword)'
+                    --parameters databasePassword='$(databasePassword)' \
                     --parameters lawID='$(lawID)'
