@@ -17,4 +17,5 @@ xanmanning.k3s*
 terraform.tfstate*
 
 # Config Files
-ghost.parameters.prod.json
+ghost.parameters.prd.json
+ghost.parameters.dev.json
