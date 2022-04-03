@@ -5,6 +5,12 @@
         "databasePassword": {
             "value": "placeholder"
         },
+        "orgPrefix": {
+            "value": "m3l"
+        },
+        "projectPrefix": {
+            "value": "blog"
+        },
         "ghostContainerName": {
             "value": "andrewmatveychuk/ghost-ai:latest"
         },
@@ -14,11 +20,11 @@
         "lawID": {
             "value": "placeholder"
         },
-        "orgPrefix": {
-            "value": "m3l"
+        "customDomainName": {
+            "value": "magnusmccune.com"
         },
-        "projectPrefix": {
-            "value": "blog"
+        "afdProfileName": {
+            "value": "m3linfraafd01"
         }
     }
 }
