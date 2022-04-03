@@ -13,6 +13,12 @@
         },
         "lawID": {
             "value": "placeholder"
+        },
+        "orgPrefix": {
+            "value": "m3l"
+        },
+        "projectPrefix": {
+            "value": "blog"
         }
     }
 }

@@ -1,6 +1,12 @@
 @description('Prefix to use when creating the resources in this deployment.')
 param applicationNamePrefix string = 'ghost'
 
+@description('Prefix to use when creating the resources in this deployment.')
+param orgPrefix string
+
+@description('Prefix to use when creating the resources in this deployment.')
+param projectPrefix string
+
 @description('App Service Plan pricing tier')
 param appServicePlanSku string = 'B1'
 
@@ -33,13 +39,13 @@ param lawID string
 ])
 param deploymentConfiguration string = 'Web app with Azure Front Door'
 
-var webAppName = '${applicationNamePrefix}-web-${uniqueString(resourceGroup().id)}'
-var appServicePlanName = '${applicationNamePrefix}-asp-${uniqueString(resourceGroup().id)}'
-var applicationInsightsName = '${applicationNamePrefix}-ai-${uniqueString(resourceGroup().id)}'
-var keyVaultName = '${applicationNamePrefix}-kv-${uniqueString(resourceGroup().id)}'
-var storageAccountName = '${applicationNamePrefix}stor${uniqueString(resourceGroup().id)}'
+var webAppName = toLower('${orgPrefix}${projectPrefix}web01')
+var appServicePlanName = toLower('${orgPrefix}${projectPrefix}asp01')
+var applicationInsightsName = toLower('${orgPrefix}${projectPrefix}ai01')
+var keyVaultName = toLower('${orgPrefix}${projectPrefix}kvt01')
+var storageAccountName = toLower('${orgPrefix}${projectPrefix}stg01')
 
-var mySQLServerName = '${applicationNamePrefix}-mysql-${uniqueString(resourceGroup().id)}'
+var mySQLServerName = toLower('${orgPrefix}${projectPrefix}mysql01')
 var databaseLogin = 'ghost'
 var databaseName = 'ghost'
 
@@ -55,8 +61,8 @@ var cdnProfileSku = {
 }
 
 //Web app with Azure Front Door
-var frontDoorName = '${applicationNamePrefix}-fd-${uniqueString(resourceGroup().id)}'
-var wafPolicyName = '${applicationNamePrefix}waf${uniqueString(resourceGroup().id)}'
+var frontDoorName = toLower('${orgPrefix}${projectPrefix}afd01')
+var wafPolicyName = toLower('${orgPrefix}${projectPrefix}afd01-waf01')
 
 
 module storageAccount 'modules/storageAccount.bicep' = {
