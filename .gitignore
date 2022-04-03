@@ -18,4 +18,3 @@ terraform.tfstate*
 
 # Config Files
 ghost.parameters.prd.json
-ghost.parameters.dev.json
