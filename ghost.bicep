@@ -1,15 +1,13 @@
 @description('Prefix to use when creating the resources in this deployment.')
-param applicationNamePrefix string = 'ghost'
-
-@description('Prefix to use when creating the resources in this deployment.')
 param orgPrefix string
 
 @description('Prefix to use when creating the resources in this deployment.')
 param projectPrefix string
 
+param siteUrl string
+
 @description('App Service Plan pricing tier')
 param appServicePlanSku string = 'B1'
-
 
 @description('Storage account pricing tier')
 param storageAccountSku string = 'Standard_LRS'
@@ -51,19 +49,6 @@ var databaseName = 'ghost'
 
 var ghostContentFileShareName = 'contentfiles'
 var ghostContentFilesMountPath = '/var/lib/ghost/content_files'
-var siteUrl = (deploymentConfiguration == 'Web app with Azure Front Door') ? 'https://${frontDoorName}.azurefd.net' : 'https://${cdnEndpointName}.azureedge.net'
-
-//Web app with Azure CDN
-var cdnProfileName = '${applicationNamePrefix}-cdnp-${uniqueString(resourceGroup().id)}'
-var cdnEndpointName = '${applicationNamePrefix}-cdne-${uniqueString(resourceGroup().id)}'
-var cdnProfileSku = {
-  name: 'Standard_Microsoft'
-}
-
-//Web app with Azure Front Door
-var frontDoorName = toLower('${orgPrefix}${projectPrefix}afd01')
-var wafPolicyName = toLower('${orgPrefix}${projectPrefix}waf01')
-
 
 module storageAccount 'modules/storageAccount.bicep' = {
   name: 'storageAccountDeploy'
@@ -151,33 +136,6 @@ module mySQLServer 'modules/mySQLServer.bicep' = {
   }
 }
 
-module cdnEndpoint './modules/cdnEndpoint.bicep' = if (deploymentConfiguration == 'Web app with Azure CDN') {
-  name: 'cdnEndPointDeploy'
-  params: {
-    cdnProfileName: cdnProfileName
-    cdnProfileSku: cdnProfileSku
-    cdnEndpointName: cdnEndpointName
-    location: location
-    logAnalyticsWorkspaceId: lawID
-    webAppName: webApp.name
-    webAppHostName: webApp.outputs.hostName
-  }
-}
-
-module frontDoor 'modules/frontDoor.bicep' = if (deploymentConfiguration == 'Web app with Azure Front Door') {
-  name: 'FrontDoorDeploy'
-  params: {
-    frontDoorName: frontDoorName
-    wafPolicyName: wafPolicyName
-    logAnalyticsWorkspaceId: lawID
-    webAppName: webApp.outputs.name
-  }
-}
-
 output webAppName string = webApp.outputs.name
 output webAppPrincipalId string = webApp.outputs.principalId
 output webAppHostName string = webApp.outputs.hostName
-
-var endpointHostName = (deploymentConfiguration == 'Web app with Azure Front Door') ? frontDoor.outputs.frontendEndpointHostName : cdnEndpoint.outputs.cdnEndpointHostName
-
-output endpointHostName string = endpointHostName
