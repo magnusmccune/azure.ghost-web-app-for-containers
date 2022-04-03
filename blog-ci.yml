@@ -35,8 +35,7 @@ stages:
         scriptLocation: 'inlineScript'
         inlineScript: |
           az deployment group what-if \
-            --resource-group $(rgName) \
-            --location $(location) \
+            --resource-group $(rgName)
             --template-file $(Build.SourcesDirectory)/ghost.bicep \
             --parameters @$(Build.SourcesDirectory)/ghost.parameters.dev.json
 - stage: DEV
@@ -67,8 +66,7 @@ stages:
                 scriptLocation: 'inlineScript'
                 inlineScript: |
                   az deployment group create \
-                    --resource-group $(rgName) \
-                    --location $(location) \
+                    --resource-group $(rgName)
                     --template-file $(System.ArtifactsDirectory)/drop/ghost.bicep \
                     --parameters @$(System.ArtifactsDirectory)/drop/ghost.parameters.dev.json \
                     --parameters databasePassword='$(databasePassword)'
