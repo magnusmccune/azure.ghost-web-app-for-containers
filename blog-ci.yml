@@ -41,7 +41,7 @@ stages:
         inlineScript: |
           az deployment sub what-if \
             --location $(location) \
-            --template-file $(Build.SourcesDirectory)/ghost.bicep \
+            --template-file $(Build.SourcesDirectory)/main.bicep \
             --parameters @$(Build.SourcesDirectory)/ghost.parameters.dev.json
 - stage: DEV
   dependsOn:
@@ -72,7 +72,7 @@ stages:
                 inlineScript: |
                   az deployment sub create \
                     --location $(location) \
-                    --template-file $(System.ArtifactsDirectory)/drop/ghost.bicep \
+                    --template-file $(System.ArtifactsDirectory)/drop/main.bicep \
                     --parameters @$(System.ArtifactsDirectory)/drop/ghost.parameters.dev.json \
                     --parameters databasePassword='$(databasePassword)' \
                     --parameters lawID='$(lawID)'
